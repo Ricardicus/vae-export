@@ -1,0 +1,13 @@
+pytorch/images/generated*
+pytorch/images/incoming*
+pytorch/__pycache__
+pytorch/dataset
+*/*.json
+*/*.pth
+venv
+*/venv
+tags
+cscope*
+
+cpp/main
+cpp/*.o
