@@ -4,7 +4,7 @@ I want to build a neural network with Pytorch and export its weights.
 I do this by building a neural network module, a variational auto encoder, and
 then export its weights by inspecting the tensors content into a json file.
 
-It then build a Cpp program that parses this json file and can run inference.
+I then build a Cpp program that parses this json file and can run inference.
 
 ## Building the model
 
