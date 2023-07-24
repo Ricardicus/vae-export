@@ -11,3 +11,4 @@ cscope*
 
 cpp/main
 cpp/*.o
+*.DS_Store
