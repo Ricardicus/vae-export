@@ -34,7 +34,6 @@ void VariationalAutoEncoder::encode(std::unique_ptr<float[]> &x) {
     }
   }
   this->relu(this->hid_1, this->h_dim);
-
   // Compute mu, sigma
   for (int o = 0; o < this->z_dim; o++) {
     this->mu[o] = 0;
@@ -89,7 +88,7 @@ void VariationalAutoEncoder::generate_latent() {
 }
 
 void VariationalAutoEncoder::forward(std::unique_ptr<float[]> &x,
-                                     std::unique_ptr<float[]> &out) {
+                                     float *out) {
   // encode
   this->encode(x);
 
@@ -200,8 +199,6 @@ void VariationalAutoEncoder::load_weights(std::string file_path) {
   int input_dim, z_dim, h_dim;
   this->get_element_size(j, "img_2hid", h_dim, input_dim);
   this->get_element_size(j, "z_2hid", h_dim, z_dim);
-
-  printf("h_dim: %d, input_dim: %d, z_dim: %d\n", h_dim, input_dim, z_dim);
 
   this->load_new(input_dim, h_dim, z_dim);
   // Load encoder

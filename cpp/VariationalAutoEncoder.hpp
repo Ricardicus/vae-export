@@ -8,7 +8,7 @@ public:
   VariationalAutoEncoder() {};
   void encode(std::unique_ptr<float[]> &x);
   void decode(std::unique_ptr<float[]> &z);
-  void forward(std::unique_ptr<float[]> &x, std::unique_ptr<float[]> &out);
+  void forward(std::unique_ptr<float[]> &x, float *out);
 
   void get_encoded(std::unique_ptr<float[]> &mu,
                    std::unique_ptr<float[]> &sigma);
