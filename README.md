@@ -27,7 +27,7 @@ cp ../pytorch/weights.json .
 ```
 # Inference 
 
-Running some epochs on MNIST:
+After running 20 epochs with the standard traning configuration on MNIST:
 
 ![Image 0 conditioning](https://github.com/Ricardicus/vae-export/blob/master/media/generated_0_ex0.png)
 ![Image 0 generated](https://github.com/Ricardicus/vae-export/blob/master/media/incoming_0_ex0.png)
@@ -58,5 +58,9 @@ Running some epochs on MNIST:
 
 ![Image 9 conditioning](https://github.com/Ricardicus/vae-export/blob/master/media/generated_9_ex0.png)
 ![Image 9 generated](https://github.com/Ricardicus/vae-export/blob/master/media/incoming_9_ex0.png)
+
+# Inference video from C++ code
+
+![Image 9 generated](https://github.com/Ricardicus/vae-export/blob/master/media/output.gif)
 
 

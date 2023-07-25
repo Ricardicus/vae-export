@@ -7,16 +7,30 @@ from model import VariationalAutoEncoder
 from torchvision import transforms
 from torchvision.utils import save_image
 from torch.utils.data import DataLoader
+import argparse
+import matplotlib.pyplot as plt
 
 # configuration
-weights_file = "weights.pth"
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-INPUT_DIM = 784
-H_DIM = 200
-Z_DIM = 20
-NUM_EPOCHS = 20
-BATCH_SIZE = 32
-LR_RATE = 3e-4
+parser = argparse.ArgumentParser(description='Variational AutoEncoder')
+parser.add_argument('--weights_file', type=str, default="weights.pth", help='file to save the weights')
+parser.add_argument('--device', type=str, default="cuda" if torch.cuda.is_available() else "cpu", help='device to use (cuda or cpu)')
+parser.add_argument('--input_dim', type=int, default=784, help='input dimension')
+parser.add_argument('--h_dim', type=int, default=200, help='hidden dimension')
+parser.add_argument('--z_dim', type=int, default=20, help='latent dimension')
+parser.add_argument('--num_epochs', type=int, default=20, help='number of epochs')
+parser.add_argument('--batch_size', type=int, default=32, help='batch size')
+parser.add_argument('--lr_rate', type=float, default=3e-4, help='learning rate')
+
+args = parser.parse_args()
+
+weights_file = args.weights_file
+device = torch.device(args.device)
+INPUT_DIM = args.input_dim
+H_DIM = args.h_dim
+Z_DIM = args.z_dim
+NUM_EPOCHS = args.num_epochs
+BATCH_SIZE = args.batch_size
+LR_RATE = args.lr_rate
 
 # Dataset Loading
 dataset = datasets.MNIST(root="dataset/", train=True, transform=transforms.ToTensor(), download=True)
@@ -27,9 +41,13 @@ loss_fn = nn.BCELoss(reduction="sum")
 
 if os.path.isfile(weights_file):
     model.load_weights(weights_file)
+    print(f"Loaded weights from: {weights_file}")
+
+loss_list = []  # create an empty list to store the loss values
 
 for epoch in range(NUM_EPOCHS):
     loop = tqdm(enumerate(train_loader))
+    
     for i, (x, _) in loop:
         x = x.to(device).view(x.shape[0], INPUT_DIM)
         x_reconstructed, mu, sigma = model(x)
@@ -44,6 +62,23 @@ for epoch in range(NUM_EPOCHS):
         loss.backward()
         optimizer.step()
         loop.set_postfix(loss=loss.item())
+        
+        loss_list.append(loss.item())  # append the loss value to the list
+
+# moving average 
+# window size for moving average
+N = 100
+
+# compute moving averages using list comprehension and built-in Python functions
+moving_averages = [sum(loss_list[i - N + 1: i + 1]) / N for i in range(N - 1, len(loss_list))]
+
+
+# plot the loss values
+plt.plot(moving_averages)
+plt.xlabel('Iteration')
+plt.ylabel('Loss')
+plt.savefig('loss.png')
+plt.show()
 
 model = model.to("cpu")
 
