@@ -10,5 +10,6 @@ tags
 cscope*
 
 cpp/main
+cpp/libpng/build
 cpp/*.o
 *.DS_Store

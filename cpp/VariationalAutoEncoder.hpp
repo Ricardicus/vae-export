@@ -5,7 +5,7 @@
 class VariationalAutoEncoder {
 public:
   VariationalAutoEncoder(int input_dim, int h_dim = 200, int z_dim = 20);
-  VariationalAutoEncoder() {};
+  VariationalAutoEncoder(){};
   void encode(std::unique_ptr<float[]> &x);
   void decode(std::unique_ptr<float[]> &z);
   void forward(std::unique_ptr<float[]> &x, float *out);
@@ -14,13 +14,15 @@ public:
                    std::unique_ptr<float[]> &sigma);
   void get_decoded(std::unique_ptr<float[]> &z);
 
+  int get_input_dim() const { return this->input_dim; };
+
   void load_weights(std::string file_path = "model_weights.pth");
 
 private:
   void relu(std::unique_ptr<float[]> &x, int size);
   void sigmoid(std::unique_ptr<float[]> &x, int size);
-  void get_element_size(nlohmann::json &json,
-                    std::string field, int &size1, int &size2);
+  void get_element_size(nlohmann::json &json, std::string field, int &size1,
+                        int &size2);
   void load_new(int input_dim, int h_dim, int z_dim);
   void load_element(std::unique_ptr<float[]> &load, nlohmann::json &json,
                     std::string field, int size1, int size2);

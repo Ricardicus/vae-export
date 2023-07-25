@@ -6,7 +6,6 @@
 ImageReader::ImageReader() : width(0), height(0), channels(0) {}
 ImageReader::~ImageReader() {}
 bool ImageReader::readPNG(const std::string &filename) {
-  std::cout << filename << std::endl;
   FILE *file = fopen(filename.c_str(), "rb");
   if (!file) {
     std::cerr << "Failed to open file: " << filename << std::endl;
@@ -56,6 +55,7 @@ bool ImageReader::readPNG(const std::string &filename) {
   fclose(file);
   return true;
 }
+
 bool ImageReader::writePNG(const std::string &filename) {
   FILE *file = fopen(filename.c_str(), "wb");
   if (!file) {
@@ -83,15 +83,18 @@ bool ImageReader::writePNG(const std::string &filename) {
     return false;
   }
   png_init_io(png, file);
-  png_set_IHDR(png, info, width, height, 8, PNG_COLOR_TYPE_RGBA,
+  png_set_IHDR(png, info, width, height, 8, PNG_COLOR_TYPE_RGB, // change to PNG_COLOR_TYPE_RGB
                PNG_INTERLACE_NONE, PNG_COMPRESSION_TYPE_DEFAULT,
                PNG_FILTER_TYPE_DEFAULT);
   png_write_info(png, info);
   png_bytep row_pointers[height];
   for (int y = 0; y < height; ++y) {
-    row_pointers[y] = new png_byte[width * channels];
-    for (int x = 0; x < width * channels; ++x) {
-      row_pointers[y][x] = data[y * width * channels + x];
+    row_pointers[y] = new png_byte[width * 3]; // change to [width * 3] because RGB has 3 channels
+    for (int x = 0; x < width; ++x) { // change to width * 3 because RGB has 3 channels
+      unsigned char d = data[y * width + x];
+      row_pointers[y][3*x] = d; // change to [y * width * 3 + x] because RGB has 3 channels
+      row_pointers[y][3*x + 1] = d;
+      row_pointers[y][3*x + 2] = d;
     }
   }
   png_write_image(png, row_pointers);
@@ -103,6 +106,7 @@ bool ImageReader::writePNG(const std::string &filename) {
   fclose(file);
   return true;
 }
+
 int ImageReader::getWidth() const { return width; }
 int ImageReader::getHeight() const { return height; }
 int ImageReader::getChannels() const { return channels; }
